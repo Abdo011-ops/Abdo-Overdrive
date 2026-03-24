@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عبد الرحمن - الخدمات الذكية</title>
+    <style>
+        body { background-color: #0b0f14; color: white; font-family: sans-serif; margin: 0; padding: 0; text-align: center; }
+        .cover-photo { background: url('https://i.ibb.co/5x6QKS1j/cover.jpg') no-repeat center; background-size: cover; height: 180px; border-bottom: 4px solid #1e3a8a; }
+        header { background: #cbd5e1; color: #1e3a8a; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        header h1 { margin: 0; font-size: 28px; }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .card { background: #1c1f26; padding: 15px; border-radius: 15px; border: 1px solid #2d333b; text-align: right; }
+        .card h3 { font-size: 16px; margin: 5px 0; display: flex; align-items: center; gap: 10px; }
+        .icon-img { width: 24px; height: 24px; object-fit: contain; }
+        .card p { font-size: 11px; color: #8b949e; line-height: 1.4; }
+        .btn { display: inline-block; padding: 6px 15px; border-radius: 6px; text-decoration: none; font-size: 12px; color: white; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .bg-green { background: #15803d; } .bg-blue { background: #1e40af; } .bg-red { background: #b91c1c; }
+        .btn-disabled { background: #1f2937; color: #6b7280; cursor: not-allowed; }
+        .partners-section { background: #f8fafc; color: #1e293b; padding: 20px; margin-top: 30px; border-radius: 25px 25px 0 0; }
+        .partners-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        .partners-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .partners-grid img { width: 100%; height: 110px; border-radius: 10px; object-fit: cover; border: 2px solid #fff; }
+        #bot-window { display: none; position: fixed; bottom: 90px; right: 20px; width: 280px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); z-index: 1001; overflow: hidden; border: 1px solid #ddd; }
+        .bot-header { background: #1e3a8a; color: white; padding: 12px; font-weight: bold; text-align: right; }
+        #chat-content { height: 220px; padding: 10px; overflow-y: auto; color: #333; text-align: right; font-size: 13px; background: #f9f9f9; }
+        .bot-msg { background: #e2e8f0; padding: 10px; border-radius: 12px 12px 0 12px; margin-bottom: 10px; color: #1e293b; line-height: 1.5; }
+        .user-msg { background: #1e3a8a; color: white; padding: 8px; border-radius: 12px 12px 12px 0; margin-bottom: 10px; align-self: flex-start; }
+        .bot-choice-btn { border: none; padding: 5px 15px; border-radius: 5px; margin: 5px 3px; cursor: pointer; font-weight: bold; color: white; }
+    </style>
+</head>
+<body>
+    <div class="cover-photo"></div>
+    <header><h1 id="mainTitle">عبد الرحمن</h1><p id="mainSub">الخدمات الذكية</p></header>
+    
+    <div class="container">
+        <div class="grid">
+            <div class="card"><h3><img src="https://i.ibb.co/BKfKsQbd/whatsapp.png" class="icon-img"> واتساب</h3><p>تواصل معنا للدعم الفوري.</p><a href="https://wa.me/201153297929" class="btn bg-green">تواصل</a></div>
+            <div class="card"><h3><img src="https://i.ibb.co/C3hHrXpn/facebook.png" class="icon-img"> فيسبوك</h3><p>تابع صفحتنا لآخر الأخبار.</p><a href="https://www.facebook.com/share/1H6QjtUqQG/" class="btn bg-blue">ابدأ</a></div>
+            <div class="card"><h3><img src="https://i.ibb.co/F1jnYft/youtube.png" class="icon-img"> يوتيوب</h3><p>شاهد فيديوهاتنا التعليمية.</p><a href="https://youtube.com/channel/UC2k1P03gfQu_Ic759XaeYhw" class="btn bg-red">تابع</a></div>
+            <div class="card"><h3>وظائف 💼</h3><p>فرص عمل مميزة بانتظارك.</p><a onclick="alert('قريباً')" class="btn btn-disabled">قريباً</a></div>
+            <div class="card"><h3>متجر أونلاين 🛒</h3><p>تسوق أفضل المنتجات.</p><a onclick="alert('قريباً')" class="btn btn-disabled">قريباً</a></div>
+            <div class="card"><h3>نقل ومواصلات 🚌</h3><p>حلول نقل ذكية.</p><a onclick="alert('قريباً')" class="btn btn-disabled">قريباً</a></div>
+        </div>
+    </div>
+
+    <div class="partners-section">
+        <div class="partners-title">شركاء النجاح</div>
+        <div class="partners-grid">
+            <img src="https://i.ibb.co/QhPLtPB/partner1.jpg">
+            <img src="https://i.ibb.co/9jf94dP/partner2.jpg">
+            <img src="https://i.ibb.co/rfTkX43m/partner3.jpg">
+        </div>
+        <a href="login.html" style="display:block; padding:15px; color:#94a3b8; text-decoration:none; font-size:11px;">دخول المشرف 🔐</a>
+    </div>
+
+    <div onclick="toggleBot()" style="position: fixed; bottom: 20px; right: 20px; background: #1e3a8a; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 1000; border: 2px solid white;"><span style="font-size: 30px;">🤖</span></div>
+
+    <div id="bot-window">
+        <div class="bot-header" id="botHeaderName">مساعد عبد الرحمن الذكي</div>
+        <div id="chat-content"><div class="bot-msg" id="initMsg">أهلاً بك! أنا المساعد الذكي الخاص بـ أستاذ عبد الرحمن. كيف يمكنني مساعدتك؟</div></div>
+        <div style="padding: 10px; display: flex; background: #eee;">
+            <input id="user-input" type="text" placeholder="اكتب..." style="flex:1; padding:8px; outline:none; border-radius:5px; border:1px solid #ccc;">
+            <button onclick="sendMsg()" style="background:#1e3a8a; color:white; border:none; padding:8px 12px; margin-right:5px; border-radius:5px;">إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var savedTitle = localStorage.getItem('mainTitle');
+            var savedBotName = localStorage.getItem('botName');
+            var savedWelcome = localStorage.getItem('welcomeMsg');
+            if(savedTitle) document.getElementById('mainTitle').innerText = savedTitle;
+            if(savedBotName) document.getElementById('botHeaderName').innerText = savedBotName;
+            if(savedWelcome) document.getElementById('initMsg').innerText = savedWelcome;
+        };
+
+        function toggleBot() { 
+            var bw = document.getElementById('bot-window'); 
+            bw.style.display = (bw.style.display === 'none' || bw.style.display === '') ? 'block' : 'none'; 
+        }
+
+        // دالة تنظيف النص لجعل البحث ذكياً
+        function cleanText(text) {
+            return text.toLowerCase()
+                       .trim()
+                       .replace(/[أإآ]/g, 'ا')
+                       .replace(/ة/g, 'ه')
+                       .replace(/[^\u0621-\u064A0-9 ]/g, ''); // حذف الرموز والحفاظ على الحروف والأرقام
+        }
+
+        function sendMsg() {
+            var ui = document.getElementById('user-input'); var cc = document.getElementById('chat-content');
+            var msg = ui.value.trim();
+            if(msg !== "") {
+                var chatLogs = JSON.parse(localStorage.getItem('chatLogs') || '[]');
+                chatLogs.push({ role: 'user', text: msg, time: new Date().toLocaleString('ar-EG'), device: navigator.userAgent });
+                localStorage.setItem('chatLogs', JSON.stringify(chatLogs));
+
+                cc.innerHTML += "<div style='display:flex; justify-content:flex-end;'><div class='user-msg'>" + msg + "</div></div>";
+                ui.value = ""; cc.scrollTop = cc.scrollHeight;
+                
+                var rules = JSON.parse(localStorage.getItem('botRules') || '[]');
+                var found = false;
+                var cleanedUserMsg = cleanText(msg);
+
+                // البحث الذكي في القواعد
+                rules.forEach(rule => {
+                    var cleanedKey = cleanText(rule.key);
+                    // إذا كانت رسالة المستخدم تحتوي على الكلمة المفتاحية (Keyword)
+                    if(cleanedUserMsg.includes(cleanedKey)) {
+                        setTimeout(() => { 
+                            cc.innerHTML += "<div class='bot-msg'>" + rule.val + "</div>"; 
+                            cc.scrollTop = cc.scrollHeight; 
+                        }, 800);
+                        found = true;
+                    }
+                });
+
+                // إذا لم يتم العثور على الكلمة في القاموس
+                if(!found) {
+                    setTimeout(() => { 
+                        var defaultMsg = `
+                            <div class="bot-msg">
+                                يرجى العلم اني لا ازال تحت التدريب من قبل مصممي الاستاذ عبد الرحمن ويمكن الاستعانة به. <br><br>
+                                <b>هل تريد التحويل الي الآن؟</b><br>
+                                <button class="bot-choice-btn bg-green" onclick="handleChoice('نعم')">نعم</button>
+                                <button class="bot-choice-btn bg-red" onclick="handleChoice('لا')">لا</button>
+                            </div>`;
+                        cc.innerHTML += defaultMsg;
+                        cc.scrollTop = cc.scrollHeight;
+                    }, 1000);
+                }
+            }
+        }
+
+        function handleChoice(val) {
+            var cc = document.getElementById('chat-content');
+            cc.innerHTML += "<div style='display:flex; justify-content:flex-end;'><div class='user-msg'>" + val + "</div></div>";
+            cc.scrollTop = cc.scrollHeight;
+
+            setTimeout(() => {
+                if(val === 'نعم') {
+                    cc.innerHTML += "<div class='bot-msg'>سوف يتم تحويل المحادثة حالياً إلى المسؤول. ⏱️</div>";
+                } else {
+                    cc.innerHTML += "<div class='bot-msg'>شكراً لتواصلك معنا وسعدنا بخدمتك. 😊</div>";
+                }
+                cc.scrollTop = cc.scrollHeight;
+            }, 800);
+        }
+
+        setInterval(function() {
+            var adminReply = localStorage.getItem('adminReply');
+            if (adminReply) {
+                var cc = document.getElementById('chat-content');
+                cc.innerHTML += "<div class='bot-msg'><b>رد من عبد الرحمن:</b><br>" + adminReply + "</div>";
+                cc.scrollTop = cc.scrollHeight;
+                localStorage.removeItem('adminReply');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
+
