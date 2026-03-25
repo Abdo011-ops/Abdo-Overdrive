@@ -24,15 +24,17 @@
         .partners-grid img { width: 100%; height: 110px; border-radius: 10px; object-fit: cover; border: 2px solid #fff; }
         #bot-window { display: none; position: fixed; bottom: 90px; right: 20px; width: 280px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); z-index: 1001; overflow: hidden; border: 1px solid #ddd; }
         .bot-header { background: #1e3a8a; color: white; padding: 12px; font-weight: bold; text-align: right; }
-        #chat-content { height: 220px; padding: 10px; overflow-y: auto; color: #333; text-align: right; font-size: 13px; background: #f9f9f9; }
-        .bot-msg { background: #e2e8f0; padding: 10px; border-radius: 12px 12px 0 12px; margin-bottom: 10px; color: #1e293b; line-height: 1.5; }
-        .user-msg { background: #1e3a8a; color: white; padding: 8px; border-radius: 12px 12px 12px 0; margin-bottom: 10px; align-self: flex-start; }
-        .bot-choice-btn { border: none; padding: 5px 15px; border-radius: 5px; margin: 5px 3px; cursor: pointer; font-weight: bold; color: white; }
+        #chat-content { height: 220px; padding: 10px; overflow-y: auto; color: #333; text-align: right; font-size: 13px; background: #f9f9f9; display: flex; flex-direction: column; }
+        .bot-msg { background: #e2e8f0; padding: 10px; border-radius: 12px 12px 0 12px; margin-bottom: 10px; color: #1e293b; line-height: 1.5; align-self: flex-start; width: fit-content; max-width: 85%; }
+        .user-msg { background: #1e3a8a; color: white; padding: 8px; border-radius: 12px 12px 12px 0; margin-bottom: 10px; align-self: flex-end; width: fit-content; max-width: 85%; }
+        .confirm-btn { padding: 5px 15px; margin: 5px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-yes { background: #15803d; color: white; }
+        .btn-no { background: #b91c1c; color: white; }
     </style>
 </head>
 <body>
     <div class="cover-photo"></div>
-    <header><h1 id="mainTitle">عبد الرحمن</h1><p id="mainSub">الخدمات الذكية</p></header>
+    <header><h1>عبد الرحمن</h1><p>الخدمات الذكية</p></header>
     
     <div class="container">
         <div class="grid">
@@ -59,7 +61,7 @@
 
     <div id="bot-window">
         <div class="bot-header" id="botHeaderName">مساعد عبد الرحمن الذكي</div>
-        <div id="chat-content"><div class="bot-msg" id="initMsg">أهلاً بك! أنا المساعد الذكي الخاص بـ أستاذ عبد الرحمن. كيف يمكنني مساعدتك؟</div></div>
+        <div id="chat-content"></div>
         <div style="padding: 10px; display: flex; background: #eee;">
             <input id="user-input" type="text" placeholder="اكتب..." style="flex:1; padding:8px; outline:none; border-radius:5px; border:1px solid #ccc;">
             <button onclick="sendMsg()" style="background:#1e3a8a; color:white; border:none; padding:8px 12px; margin-right:5px; border-radius:5px;">إرسال</button>
@@ -67,13 +69,23 @@
     </div>
 
     <script>
+        // دالة تسجيل الزوار المحدثة (تأخذ IP واسم الجهاز)
+        function logVisitor() {
+            const time = new Date().toLocaleString('ar-EG');
+            const ua = navigator.userAgent;
+            fetch('https://api.ipify.org?format=json').then(r => r.json()).then(data => {
+                let logs = JSON.parse(localStorage.getItem('visitorLogs') || '[]');
+                logs.unshift({ time: time, ip: data.ip, device: ua });
+                localStorage.setItem('visitorLogs', JSON.stringify(logs.slice(0, 100)));
+            });
+        }
+        
         window.onload = function() {
-            var savedTitle = localStorage.getItem('mainTitle');
-            var savedBotName = localStorage.getItem('botName');
-            var savedWelcome = localStorage.getItem('welcomeMsg');
-            if(savedTitle) document.getElementById('mainTitle').innerText = savedTitle;
-            if(savedBotName) document.getElementById('botHeaderName').innerText = savedBotName;
-            if(savedWelcome) document.getElementById('initMsg').innerText = savedWelcome;
+            logVisitor();
+            // تحميل النصوص الثابتة للبوت من لوحة التحكم
+            document.getElementById('botHeaderName').innerText = localStorage.getItem('bot_title') || "مساعد عبد الرحمن الذكي";
+            document.getElementById('chat-content').innerHTML = `<div class="bot-msg">${localStorage.getItem('bot_welcome') || "أهلاً بك! أنا المساعد الذكي الخاص بـ أستاذ عبد الرحمن. كيف يمكنني مساعدتك؟"}</div>`;
+            localStorage.setItem('chat_status', 'inactive'); // إعادة ضبط حالة الدردشة عند الدخول
         };
 
         function toggleBot() { 
@@ -81,82 +93,71 @@
             bw.style.display = (bw.style.display === 'none' || bw.style.display === '') ? 'block' : 'none'; 
         }
 
-        // دالة تنظيف النص لجعل البحث ذكياً
-        function cleanText(text) {
-            return text.toLowerCase()
-                       .trim()
-                       .replace(/[أإآ]/g, 'ا')
-                       .replace(/ة/g, 'ه')
-                       .replace(/[^\u0621-\u064A0-9 ]/g, ''); // حذف الرموز والحفاظ على الحروف والأرقام
+        // دالة معالجة اختيار العميل (نعم/لا) - المحدثة للدردشة المباشرة
+        function handleChoice(choice) {
+            var cc = document.getElementById('chat-content');
+            if(choice === 'yes') {
+                cc.innerHTML += "<div class='bot-msg'>جاري تحويلك للمسؤول... فضلاً اكتب استفسارك هنا وسنرد عليك فوراً.</div>";
+                localStorage.setItem('chat_status', 'active'); // تفعيل وضع الدردشة المباشرة
+            } else {
+                cc.innerHTML += "<div class='bot-msg'>شكراً لتواصلك معنا وساعدنا بخدمتك.</div>";
+                localStorage.setItem('chat_status', 'inactive');
+            }
+            cc.scrollTop = cc.scrollHeight;
         }
 
         function sendMsg() {
-            var ui = document.getElementById('user-input'); var cc = document.getElementById('chat-content');
-            var msg = ui.value.trim();
-            if(msg !== "") {
-                var chatLogs = JSON.parse(localStorage.getItem('chatLogs') || '[]');
-                chatLogs.push({ role: 'user', text: msg, time: new Date().toLocaleString('ar-EG'), device: navigator.userAgent });
-                localStorage.setItem('chatLogs', JSON.stringify(chatLogs));
-
-                cc.innerHTML += "<div style='display:flex; justify-content:flex-end;'><div class='user-msg'>" + msg + "</div></div>";
-                ui.value = ""; cc.scrollTop = cc.scrollHeight;
-                
-                var rules = JSON.parse(localStorage.getItem('botRules') || '[]');
-                var found = false;
-                var cleanedUserMsg = cleanText(msg);
-
-                // البحث الذكي في القواعد
-                rules.forEach(rule => {
-                    var cleanedKey = cleanText(rule.key);
-                    // إذا كانت رسالة المستخدم تحتوي على الكلمة المفتاحية (Keyword)
-                    if(cleanedUserMsg.includes(cleanedKey)) {
-                        setTimeout(() => { 
-                            cc.innerHTML += "<div class='bot-msg'>" + rule.val + "</div>"; 
-                            cc.scrollTop = cc.scrollHeight; 
-                        }, 800);
-                        found = true;
-                    }
-                });
-
-                // إذا لم يتم العثور على الكلمة في القاموس
-                if(!found) {
-                    setTimeout(() => { 
-                        var defaultMsg = `
-                            <div class="bot-msg">
-                                يرجى العلم اني لا ازال تحت التدريب من قبل مصممي الاستاذ عبد الرحمن ويمكن الاستعانة به. <br><br>
-                                <b>هل تريد التحويل الي الآن؟</b><br>
-                                <button class="bot-choice-btn bg-green" onclick="handleChoice('نعم')">نعم</button>
-                                <button class="bot-choice-btn bg-red" onclick="handleChoice('لا')">لا</button>
-                            </div>`;
-                        cc.innerHTML += defaultMsg;
-                        cc.scrollTop = cc.scrollHeight;
-                    }, 1000);
-                }
-            }
-        }
-
-        function handleChoice(val) {
+            var ui = document.getElementById('user-input'); 
             var cc = document.getElementById('chat-content');
-            cc.innerHTML += "<div style='display:flex; justify-content:flex-end;'><div class='user-msg'>" + val + "</div></div>";
+            var msg = ui.value.trim();
+            if(msg === "") return;
+
+            // إظهار رسالة المستخدم
+            cc.innerHTML += "<div class='user-msg'>" + msg + "</div>";
+            ui.value = ""; 
             cc.scrollTop = cc.scrollHeight;
 
+            // إذا كانت الدردشة المباشرة مفعلة، احفظ الرسالة للمسؤول
+            if(localStorage.getItem('chat_status') === 'active') {
+                let liveData = JSON.parse(localStorage.getItem('live_chat_data') || '[]');
+                liveData.push({ role: 'client', text: msg });
+                localStorage.setItem('live_chat_data', JSON.stringify(liveData));
+                return; // لا تكمل للرد الآلي
+            }
+            
+            // الرد الآلي الذكي
             setTimeout(() => {
-                if(val === 'نعم') {
-                    cc.innerHTML += "<div class='bot-msg'>سوف يتم تحويل المحادثة حالياً إلى المسؤول. ⏱️</div>";
+                const aiData = JSON.parse(localStorage.getItem('bot_ai_data') || '[]');
+                let found = false; 
+                let botReply = "";
+
+                aiData.forEach(item => {
+                    item.keywords.forEach(key => {
+                        if (msg.toLowerCase().includes(key.toLowerCase())) { botReply = item.reply; found = true; }
+                    });
+                });
+
+                if (found) {
+                    cc.innerHTML += "<div class='bot-msg'>" + botReply + "</div>";
                 } else {
-                    cc.innerHTML += "<div class='bot-msg'>شكراً لتواصلك معنا وسعدنا بخدمتك. 😊</div>";
+                    cc.innerHTML += `<div class='bot-msg'>يرجى العلم اني لا ازال تحت التدريب من قبل مصممي الاستاذ عبد الرحمن ويمكن الاستعانة به.<br><br>هل تريد التحويل الي الآن؟<br><button class="confirm-btn btn-yes" onclick="handleChoice('yes')">نعم</button><button class="confirm-btn btn-no" onclick="handleChoice('no')">لا</button></div>`;
                 }
                 cc.scrollTop = cc.scrollHeight;
             }, 800);
         }
 
-        setInterval(function() {
-            var adminReply = localStorage.getItem('adminReply');
-            if (adminReply) {
-                var cc = document.getElementById('chat-content');
-                cc.innerHTML += "<div class='bot-msg'><b>رد من عبد الرحمن:</b><br>" + adminReply + "</div>";
-                cc.scrollTop = cc.scrollHeight;
-                localStorage.removeItem('adminReply');
+        // فحص الردود القادمة من المدير كل ثانية
+        setInterval(() => {
+            if(localStorage.getItem('chat_status') === 'active') {
+                let liveData = JSON.parse(localStorage.getItem('live_chat_data') || '[]');
+                let lastMsg = liveData[liveData.length - 1];
+                if(lastMsg && lastMsg.role === 'admin' && !lastMsg.shown) {
+                    var cc = document.getElementById('chat-content');
+                    cc.innerHTML += "<div class='bot-msg'><b>المسؤول:</b> " + lastMsg.text + "</div>";
+                    lastMsg.shown = true; // علامة لعدم تكرار الرسالة
+                    localStorage.setItem('live_chat_data', JSON.stringify(liveData));
+                    cc.scrollTop = cc.scrollHeight;
+                }
             }
         }, 1000);
     </script>
